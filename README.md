@@ -1,4 +1,5 @@
 # pyharmovis
+![topimage](Sample.png)
 
 ## Install
 ```
@@ -132,6 +133,7 @@ hvdeck.display()
 
 ### Designation of viewpoints
 ```
+import pyharmovis as phv
 hvdeck = phv.HvDeck()
 hvdeck.setViewport({"longitude": 136.7973447245247, "latitude": 35.30216933059135})
 hvdeck.display()
