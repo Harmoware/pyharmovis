@@ -71,7 +71,7 @@ class HvDeck:
         iframe = f"""<iframe width={width} height={height} frameborder="0" srcdoc="{srcdoc}"></iframe>"""
         return HTML(iframe)
 
-    def to_html(self,filename=None):
+    def to_html(self,filename='Sample.html'):
         html_str = render_json_to_html(
             self.widgetCdnPath,
             self.mapboxApiKey,
