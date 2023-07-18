@@ -131,6 +131,13 @@ hvdeck.setLayer([mvl,dpl])
 hvdeck.display()
 ```
 
+### Save html
+```
+hvdeck = phv.HvDeck()
+hvdeck.setLayer([mvl])
+hvdeck.to_html('Sample.html')
+```
+
 ### Designation of viewpoints
 ```
 import pyharmovis as phv
