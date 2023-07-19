@@ -125,10 +125,11 @@ class DepotsLayer:
             for index, row in dataframe.iterrows():
                 json_str += "{"
                 for item in dataframe:
-                    if(type(row[item]) is str):
-                        json_str += '"'+str(item)+'":"'+str(row[item])+'",'
-                    else:
-                        json_str += '"'+str(item)+'":'+str(row[item])+','
+                    if str(row[item]) != 'nan':
+                        if(type(row[item]) is str):
+                            json_str += '"'+str(item)+'":"'+str(row[item])+'",'
+                        else:
+                            json_str += '"'+str(item)+'":'+str(row[item])+','
                 json_str += "},"
             json_str += "]"
             self.dataframe = json_str
