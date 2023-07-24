@@ -20,9 +20,12 @@ def getHtml():
             widget.create({
                 container,
                 mapboxApiKey,
+                {% if movesLayer %}movesLayer:"{{movesLayer}}",{% endif %}
                 {% if movesbase %}movesbase,{% endif %}
+                {% if depotsLayer %}depotsLayer:"{{depotsLayer}}",{% endif %}
                 {% if depotsBase %}depotsBase,{% endif %}
                 {% if viewport %}viewport,{% endif %}
+                {% if orbitViewSw %}orbitViewSw:true,{% endif %}
             })
         </script>
     </body>

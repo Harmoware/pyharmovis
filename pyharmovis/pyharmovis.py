@@ -8,21 +8,26 @@ import json
 from pyharmovis.template import getHtml
 from IPython.display import HTML  # noqa
 
-def render_json_to_html(widgetCdnPath,mapboxApiKey,movesbase,depotsBase,viewport):
+def render_json_to_html(widgetCdnPath,mapboxApiKey,movesLayer,movesbase,depotsLayer,depotsBase,viewport,orbitViewSw):
     basehtml = getHtml()
     template = jinja2.Template(source=basehtml)
     return template.render(
         widgetCdnPath=widgetCdnPath,
         mapboxApiKey=mapboxApiKey,
+        movesLayer=movesLayer,
         movesbase=movesbase,
+        depotsLayer=depotsLayer,
         depotsBase=depotsBase,
-        viewport=viewport
+        viewport=viewport,
+        orbitViewSw=orbitViewSw
     )
 
 class HvDeck:
     widgetCdnPath = None
     mapboxApiKey = None
+    movesLayerName = None
     movesbasedataframe = None
+    depotsLayerName = None
     depotsBasedataframe = None
     viewport = None
 
@@ -48,8 +53,13 @@ class HvDeck:
         for layerItem in layers:
             if(type(layerItem) is MovesLayer):
                 self.movesbasedataframe = layerItem.dataframe
+                self.movesLayerName = layerItem.layerName
+            elif(type(layerItem) is PointCloudLayer):
+                self.movesbasedataframe = layerItem.dataframe
+                self.movesLayerName = layerItem.layerName
             elif(type(layerItem) is DepotsLayer):
                 self.depotsBasedataframe = layerItem.dataframe
+                self.depotsLayerName = layerItem.layerName
             else:
                 print("HvDeck.setLayer : Unsupported data!")
 
@@ -59,31 +69,38 @@ class HvDeck:
         else:
             print("HvDeck.setViewport : Unsupported data!")
 
-    def display(self,width="100%",height=600):
+    def display(self,width="100%",height=600,orbitViewSw=False):
         html_str = render_json_to_html(
             self.widgetCdnPath,
             self.mapboxApiKey,
+            self.movesLayerName,
             self.movesbasedataframe,
+            self.depotsLayerName,
             self.depotsBasedataframe,
             self.viewport,
+            orbitViewSw
             )
         srcdoc = html.escape(html_str)
         iframe = f"""<iframe width={width} height={height} frameborder="0" srcdoc="{srcdoc}"></iframe>"""
         return HTML(iframe)
 
-    def to_html(self,filename='Sample.html'):
+    def to_html(self,filename='Sample.html',orbitViewSw=False):
         html_str = render_json_to_html(
             self.widgetCdnPath,
             self.mapboxApiKey,
+            self.movesLayerName,
             self.movesbasedataframe,
+            self.depotsLayerName,
             self.depotsBasedataframe,
             self.viewport,
+            orbitViewSw
             )
         with open(filename, "w+", encoding="utf-8") as f:
             f.write(html_str)
 
 class MovesLayer:
     dataframe = None
+    layerName = "MovesLayer"
 
     def __init__(self,dataframe=None):
         if dataframe is None:
@@ -110,8 +127,14 @@ class MovesLayer:
         else:
             print("MovesLayer.setData : Unsupported data!")
 
+class PointCloudLayer(MovesLayer):
+    def __init__(self,dataframe=None):
+        super().__init__(dataframe)
+        self.layerName = "PointCloudLayer"
+
 class DepotsLayer:
     dataframe = None
+    layerName = "DepotsLayer"
 
     def __init__(self,dataframe=None):
         if dataframe is None:
