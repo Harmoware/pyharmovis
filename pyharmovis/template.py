@@ -15,6 +15,7 @@ def getHtml():
             {% if movesbase %}const movesbase = {{movesbase}};{% endif %}
             {% if depotsBase %}const depotsBase = {{depotsBase}};{% endif %}
             {% if viewport %}const viewport = {{viewport}};{% endif %}
+            {% if property %}const property = {{property}};{% endif %}
             const container = document.getElementById('app')
             const widget = new HarmoVisWidget()
             widget.create({
@@ -25,6 +26,7 @@ def getHtml():
                 {% if depotsLayer %}depotsLayer:"{{depotsLayer}}",{% endif %}
                 {% if depotsBase %}depotsBase,{% endif %}
                 {% if viewport %}viewport,{% endif %}
+                {% if property %}property,{% else %}property:{},{% endif %}
                 {% if orbitViewSw %}orbitViewSw:true,{% endif %}
             })
         </script>

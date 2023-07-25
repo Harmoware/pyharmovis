@@ -8,7 +8,7 @@ import json
 from pyharmovis.template import getHtml
 from IPython.display import HTML  # noqa
 
-def render_json_to_html(widgetCdnPath,mapboxApiKey,movesLayer,movesbase,depotsLayer,depotsBase,viewport,orbitViewSw):
+def render_json_to_html(widgetCdnPath,mapboxApiKey,movesLayer,movesbase,depotsLayer,depotsBase,viewport,property,orbitViewSw):
     basehtml = getHtml()
     template = jinja2.Template(source=basehtml)
     return template.render(
@@ -19,6 +19,7 @@ def render_json_to_html(widgetCdnPath,mapboxApiKey,movesLayer,movesbase,depotsLa
         depotsLayer=depotsLayer,
         depotsBase=depotsBase,
         viewport=viewport,
+        property=property,
         orbitViewSw=orbitViewSw
     )
 
@@ -30,6 +31,7 @@ class HvDeck:
     depotsLayerName = None
     depotsBasedataframe = None
     viewport = None
+    property = None
 
     def __init__(self,mapboxApiKey='MAPBOX_ACCESS_TOKEN',widgetCdnPath='http://192.168.197.229/HarmoVis-widget/library.js'):
         self.mapboxApiKey = os.environ.get(mapboxApiKey)
@@ -69,7 +71,15 @@ class HvDeck:
         else:
             print("HvDeck.setViewport : Unsupported data!")
 
+    def setProperty(self,property=None):
+        if(type(property) is dict):
+            self.property = property
+        else:
+            print("HvDeck.setProperty : Unsupported data!")
+
     def display(self,width="100%",height=600,orbitViewSw=False):
+        if(type(orbitViewSw) is not bool):
+            print("HvDeck.display : Unsupported data!")
         html_str = render_json_to_html(
             self.widgetCdnPath,
             self.mapboxApiKey,
@@ -78,6 +88,7 @@ class HvDeck:
             self.depotsLayerName,
             self.depotsBasedataframe,
             self.viewport,
+            self.property,
             orbitViewSw
             )
         srcdoc = html.escape(html_str)
@@ -85,6 +96,8 @@ class HvDeck:
         return HTML(iframe)
 
     def to_html(self,filename='Sample.html',orbitViewSw=False):
+        if(type(orbitViewSw) is not bool):
+            print("HvDeck.display : Unsupported data!")
         html_str = render_json_to_html(
             self.widgetCdnPath,
             self.mapboxApiKey,
@@ -93,6 +106,7 @@ class HvDeck:
             self.depotsLayerName,
             self.depotsBasedataframe,
             self.viewport,
+            self.property,
             orbitViewSw
             )
         with open(filename, "w+", encoding="utf-8") as f:
