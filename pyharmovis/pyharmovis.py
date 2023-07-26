@@ -26,9 +26,9 @@ def render_json_to_html(widgetCdnPath,mapboxApiKey,movesLayer,movesbase,depotsLa
 class HvDeck:
     widgetCdnPath = None
     mapboxApiKey = None
-    movesLayerName = None
+    movesLayerName = []
     movesbasedataframe = None
-    depotsLayerName = None
+    depotsLayerName = []
     depotsBasedataframe = None
     viewport = None
     property = None
@@ -39,6 +39,13 @@ class HvDeck:
             self.mapboxApiKey = ""
             print("Mapbox ApiKey could not be obtained.")
         self.widgetCdnPath = widgetCdnPath
+        self.movesLayerName = []
+        self.movesbasedataframe = None
+        self.depotsLayerName = []
+        self.depotsBasedataframe = None
+        self.viewport = None
+        self.property = None
+
 
     def setApiKey(self,mapboxApiKey=None):
         self.mapboxApiKey = os.environ.get(mapboxApiKey)
@@ -54,14 +61,17 @@ class HvDeck:
             layers.append(layer)
         for layerItem in layers:
             if(type(layerItem) is MovesLayer):
-                self.movesbasedataframe = layerItem.dataframe
-                self.movesLayerName = layerItem.layerName
+                if layerItem.dataframe is not None:
+                    self.movesbasedataframe = layerItem.dataframe
+                self.movesLayerName.append(layerItem.layerName)
             elif(type(layerItem) is PointCloudLayer):
-                self.movesbasedataframe = layerItem.dataframe
-                self.movesLayerName = layerItem.layerName
+                if layerItem.dataframe is not None:
+                    self.movesbasedataframe = layerItem.dataframe
+                self.movesLayerName.append(layerItem.layerName)
             elif(type(layerItem) is DepotsLayer):
-                self.depotsBasedataframe = layerItem.dataframe
-                self.depotsLayerName = layerItem.layerName
+                if layerItem.dataframe is not None:
+                    self.depotsBasedataframe = layerItem.dataframe
+                self.depotsLayerName.append(layerItem.layerName)
             else:
                 print("HvDeck.setLayer : Unsupported data!")
 
@@ -117,9 +127,8 @@ class MovesLayer:
     layerName = "MovesLayer"
 
     def __init__(self,dataframe=None):
-        if dataframe is None:
-            self.dataframe = dataframe
-        else:
+        dataframe = None
+        if dataframe is not None:
             self.setData(dataframe)
 
     def setData(self,dataframe):
@@ -151,9 +160,8 @@ class DepotsLayer:
     layerName = "DepotsLayer"
 
     def __init__(self,dataframe=None):
-        if dataframe is None:
-            self.dataframe = dataframe
-        else:
+        dataframe = None
+        if dataframe is not None:
             self.setData(dataframe)
 
     def setData(self,dataframe):
