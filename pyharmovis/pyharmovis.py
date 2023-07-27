@@ -68,6 +68,10 @@ class HvDeck:
                 if layerItem.dataframe is not None:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
+            elif(type(layerItem) is TextLayer):
+                if layerItem.dataframe is not None:
+                    self.movesbasedataframe = layerItem.dataframe
+                self.movesLayerName.append(layerItem.layerName)
             elif(type(layerItem) is DepotsLayer):
                 if layerItem.dataframe is not None:
                     self.depotsBasedataframe = layerItem.dataframe
@@ -154,6 +158,11 @@ class PointCloudLayer(MovesLayer):
     def __init__(self,dataframe=None):
         super().__init__(dataframe)
         self.layerName = "PointCloudLayer"
+
+class TextLayer(MovesLayer):
+    def __init__(self,dataframe=None):
+        super().__init__(dataframe)
+        self.layerName = "TextLayer"
 
 class DepotsLayer:
     dataframe = None
