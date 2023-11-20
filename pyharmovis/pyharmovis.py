@@ -64,30 +64,39 @@ class HvDeck:
                 if layerItem.dataframe is not None:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
+                self.movesLayerName.append(layerItem.assignProps)
             elif(type(layerItem) is PointCloudLayer):
                 if layerItem.dataframe is not None:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
+                self.movesLayerName.append(layerItem.assignProps)
             elif(type(layerItem) is TextLayer):
                 if layerItem.dataframe is not None:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
+                self.movesLayerName.append(layerItem.assignProps)
+            elif(type(layerItem) is Heatmap3dLayer):
+                if layerItem.dataframe is not None:
+                    self.movesbasedataframe = layerItem.dataframe
+                self.movesLayerName.append(layerItem.layerName)
+                self.movesLayerName.append(layerItem.assignProps)
             elif(type(layerItem) is DepotsLayer):
                 if layerItem.dataframe is not None:
                     self.depotsBasedataframe = layerItem.dataframe
                 self.depotsLayerName.append(layerItem.layerName)
+                self.depotsLayerName.append(layerItem.assignProps)
             else:
                 print("HvDeck.setLayer : Unsupported data!")
 
     def setViewport(self,viewport=None):
         if(type(viewport) is dict):
-            self.viewport = viewport
+            self.viewport = json.dumps(viewport,ensure_ascii=False)
         else:
             print("HvDeck.setViewport : Unsupported data!")
 
     def setProperty(self,property=None):
         if(type(property) is dict):
-            self.property = property
+            self.property = json.dumps(property,ensure_ascii=False)
         else:
             print("HvDeck.setProperty : Unsupported data!")
 
@@ -129,6 +138,7 @@ class HvDeck:
 class MovesLayer:
     dataframe = None
     layerName = "MovesLayer"
+    assignProps = '{}'
 
     def __init__(self,dataframe=None):
         dataframe = None
@@ -152,7 +162,13 @@ class MovesLayer:
         elif(type(dataframe) is list):
             self.dataframe = dataframe
         else:
-            print("MovesLayer.setData : Unsupported data!")
+            print(self.layerName + ".setData : Unsupported data!")
+
+    def setLayaerProps(self,assignProps):
+        if(type(assignProps) is dict):
+            self.assignProps = json.dumps(assignProps,ensure_ascii=False)
+        else:
+            print(self.layerName + ".setLayaerProps : Unsupported data!")
 
 class PointCloudLayer(MovesLayer):
     def __init__(self,dataframe=None):
@@ -164,9 +180,15 @@ class TextLayer(MovesLayer):
         super().__init__(dataframe)
         self.layerName = "TextLayer"
 
+class Heatmap3dLayer(MovesLayer):
+    def __init__(self,dataframe=None):
+        super().__init__(dataframe)
+        self.layerName = "Heatmap3dLayer"
+
 class DepotsLayer:
     dataframe = None
     layerName = "DepotsLayer"
+    assignProps = '{}'
 
     def __init__(self,dataframe=None):
         dataframe = None
@@ -193,4 +215,10 @@ class DepotsLayer:
         elif(type(dataframe) is list):
             self.dataframe = dataframe
         else:
-            print("DepotsLayer.setData : Unsupported data!")
+            print(self.layerName + ".setData : Unsupported data!")
+
+    def setLayaerProps(self,assignProps):
+        if(type(assignProps) is dict):
+            self.assignProps = json.dumps(assignProps,ensure_ascii=False)
+        else:
+            print(self.layerName + ".setLayaerProps : Unsupported data!")
