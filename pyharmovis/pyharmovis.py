@@ -34,10 +34,13 @@ class HvDeck:
     property = None
 
     def __init__(self,mapboxApiKey='MAPBOX_ACCESS_TOKEN',widgetCdnPath='http://192.168.197.229/HarmoVis-widget/library.js'):
-        self.mapboxApiKey = os.environ.get(mapboxApiKey)
-        if(self.mapboxApiKey == None):
+        if(mapboxApiKey == ""):
             self.mapboxApiKey = ""
-            print("Mapbox ApiKey could not be obtained.")
+        else:
+            self.mapboxApiKey = os.environ.get(mapboxApiKey)
+            if(self.mapboxApiKey == None):
+                self.mapboxApiKey = ""
+                print("Mapbox ApiKey could not be obtained.")
         self.widgetCdnPath = widgetCdnPath
         self.movesLayerName = []
         self.movesbasedataframe = None
@@ -141,7 +144,6 @@ class MovesLayer:
     assignProps = '{}'
 
     def __init__(self,dataframe=None):
-        dataframe = None
         if dataframe is not None:
             self.setData(dataframe)
 
