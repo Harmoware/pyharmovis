@@ -143,6 +143,32 @@ class HvDeck:
         with open(filename, "w+", encoding="utf-8") as f:
             f.write(html_str)
 
+def transData(sourceData,transParams={}):
+    resultData = sourceData
+    if "positionkey" in transParams:
+        positionkey = transParams["positionkey"]
+        if positionkey in resultData:
+            positionData = resultData.pop(positionkey)
+            resultData["position"] = positionData
+    elif "long_x_key" in transParams and "lati_y_key" in transParams:
+        long_x_key = transParams["long_x_key"]
+        lati_y_key = transParams["lati_y_key"]
+        if long_x_key in resultData and lati_y_key in resultData:
+            long_x_Data = resultData.pop(long_x_key)
+            lati_y_Data = resultData.pop(lati_y_key)
+            height_z_Data = 0
+            if "height_z_key" in transParams:
+                height_z_key = transParams["height_z_key"]
+                if height_z_key in resultData:
+                    height_z_Data = resultData.pop(height_z_key)
+            resultData["position"] = [long_x_Data,lati_y_Data,height_z_Data]
+    if "elapsedtimekey" in transParams:
+        elapsedtimekey = transParams["elapsedtimekey"]
+        if elapsedtimekey in resultData:
+            elapsedtimeData = resultData.pop(elapsedtimekey)
+            resultData["elapsedtime"] = elapsedtimeData
+    return resultData
+
 class MovesLayer:
     dataframe = None
     layerName = "MovesLayer"
@@ -152,22 +178,45 @@ class MovesLayer:
         if dataframe is not None:
             self.setData(dataframe)
 
-    def setData(self,dataframe):
+    def setData(self,dataframe,transParams={}):
         if (type(dataframe) is pandas.core.frame.DataFrame):
             json_str = "["
             for num1 in range(len(dataframe.index)):
                 json_str += """{"operation":["""
                 for num2 in range(len(dataframe.columns)):
                     if dataframe[num2][num1] != None:
-                        json_str += json.dumps(dataframe[num2][num1]) + ","
+                        json_str += json.dumps(transData(dataframe[num2][num1],transParams)) + ","
                 json_str += "]},"
             json_str += "]"
             self.dataframe = json_str
+            self.assignProps = json.dumps(transParams,ensure_ascii=False)
         elif(type(dataframe) is str):
             r = requests.get(dataframe)
-            self.dataframe = r.text
+            fileData = json.loads(r.text)
+            for lineData in fileData:
+                if "operationkey" in transParams:
+                    operationkey = transParams["operationkey"]
+                    if operationkey in lineData:
+                        operationData = lineData.pop(operationkey)
+                        lineData["operation"] = operationData
+                    operationData = lineData["operation"]
+                    for posData in operationData:
+                        posData = transData(posData,transParams)
+            self.dataframe = json.dumps(fileData)
+            self.assignProps = json.dumps(transParams,ensure_ascii=False)
         elif(type(dataframe) is list):
-            self.dataframe = dataframe
+            fileData = dataframe
+            for lineData in fileData:
+                if "operationkey" in transParams:
+                    operationkey = transParams["operationkey"]
+                    if operationkey in lineData:
+                        operationData = lineData.pop(operationkey)
+                        lineData["operation"] = operationData
+                    operationData = lineData["operation"]
+                    for posData in operationData:
+                        posData = transData(posData,transParams)
+            self.dataframe = json.dumps(fileData)
+            self.assignProps = json.dumps(transParams,ensure_ascii=False)
         else:
             print(self.layerName + ".setData : Unsupported data!")
 
@@ -207,25 +256,28 @@ class DepotsLayer:
         if dataframe is not None:
             self.setData(dataframe)
 
-    def setData(self,dataframe):
+    def setData(self,dataframe,transParams={}):
         if (type(dataframe) is pandas.core.frame.DataFrame):
             json_str = "["
-            for index, row in dataframe.iterrows():
-                json_str += "{"
-                for item in dataframe:
-                    if str(row[item]) != 'nan':
-                        if(type(row[item]) is str):
-                            json_str += '"'+str(item)+'":"'+str(row[item])+'",'
-                        else:
-                            json_str += '"'+str(item)+'":'+str(row[item])+','
-                json_str += "},"
+            dataframeDic = dataframe.to_dict(orient='records')
+            for dicElement in dataframeDic:
+                json_str += json.dumps(transData(dicElement,transParams)) + ","
             json_str += "]"
             self.dataframe = json_str
+            self.assignProps = json.dumps(transParams,ensure_ascii=False)
         elif(type(dataframe) is str):
             r = requests.get(dataframe)
-            self.dataframe = r.text
+            fileData = json.loads(r.text)
+            for lineData in fileData:
+                lineData = transData(lineData,transParams)
+            self.dataframe = json.dumps(fileData)
+            self.assignProps = json.dumps(transParams,ensure_ascii=False)
         elif(type(dataframe) is list):
-            self.dataframe = dataframe
+            fileData = dataframe
+            for lineData in fileData:
+                lineData = transData(lineData,transParams)
+            self.dataframe = json.dumps(fileData)
+            self.assignProps = json.dumps(transParams,ensure_ascii=False)
         else:
             print(self.layerName + ".setData : Unsupported data!")
 
