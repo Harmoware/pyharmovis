@@ -174,12 +174,17 @@ class MovesLayer:
     layerName = "MovesLayer"
     assignProps = '{}'
 
-    def __init__(self,dataframe=None):
+    def __init__(self,dataframe=None,transParams={}):
         if dataframe is not None:
-            self.setData(dataframe)
+            self.setData(dataframe,transParams)
 
-    def setData(self,dataframe,transParams={}):
-        if (type(dataframe) is pandas.core.frame.DataFrame):
+    def setData(self,dataframe=None,transParams={}):
+        if(type(transParams) is not dict):
+            print(self.layerName + ".setData : Unsupported transParams!")
+            return
+        if dataframe is None:
+            self.assignProps = json.dumps(transParams,ensure_ascii=False)
+        elif (type(dataframe) is pandas.core.frame.DataFrame):
             json_str = "["
             for num1 in range(len(dataframe.index)):
                 json_str += """{"operation":["""
@@ -218,13 +223,13 @@ class MovesLayer:
             self.dataframe = json.dumps(fileData)
             self.assignProps = json.dumps(transParams,ensure_ascii=False)
         else:
-            print(self.layerName + ".setData : Unsupported data!")
+            print(self.layerName + ".setData : Unsupported dataframe!")
 
     def setLayaerProps(self,assignProps):
         if(type(assignProps) is dict):
             self.assignProps = json.dumps(assignProps,ensure_ascii=False)
         else:
-            print(self.layerName + ".setLayaerProps : Unsupported data!")
+            print(self.layerName + ".setLayaerProps : Unsupported assignProps!")
 
 class PointCloudLayer(MovesLayer):
     def __init__(self,dataframe=None):
@@ -251,13 +256,18 @@ class DepotsLayer:
     layerName = "DepotsLayer"
     assignProps = '{}'
 
-    def __init__(self,dataframe=None):
+    def __init__(self,dataframe=None,transParams={}):
         dataframe = None
         if dataframe is not None:
-            self.setData(dataframe)
+            self.setData(dataframe,transParams)
 
     def setData(self,dataframe,transParams={}):
-        if (type(dataframe) is pandas.core.frame.DataFrame):
+        if(type(transParams) is not dict):
+            print(self.layerName + ".setData : Unsupported transParams!")
+            return
+        if dataframe is None:
+            self.assignProps = json.dumps(transParams,ensure_ascii=False)
+        elif (type(dataframe) is pandas.core.frame.DataFrame):
             json_str = "["
             dataframeDic = dataframe.to_dict(orient='records')
             for dicElement in dataframeDic:
@@ -279,10 +289,10 @@ class DepotsLayer:
             self.dataframe = json.dumps(fileData)
             self.assignProps = json.dumps(transParams,ensure_ascii=False)
         else:
-            print(self.layerName + ".setData : Unsupported data!")
+            print(self.layerName + ".setData : Unsupported dataframe!")
 
     def setLayaerProps(self,assignProps):
         if(type(assignProps) is dict):
             self.assignProps = json.dumps(assignProps,ensure_ascii=False)
         else:
-            print(self.layerName + ".setLayaerProps : Unsupported data!")
+            print(self.layerName + ".setLayaerProps : Unsupported assignProps!")
