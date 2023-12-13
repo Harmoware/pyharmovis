@@ -237,28 +237,28 @@ class MovesLayer:
             print(self.layerName + ".setLayaerProps : Unsupported assignProps!")
 
 class PointCloudLayer(MovesLayer):
-    def __init__(self,dataframe=None):
-        super().__init__(dataframe)
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
         self.layerName = "PointCloudLayer"
 
 class TextLayer(MovesLayer):
-    def __init__(self,dataframe=None):
-        super().__init__(dataframe)
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
         self.layerName = "TextLayer"
 
 class Heatmap3dLayer(MovesLayer):
-    def __init__(self,dataframe=None):
-        super().__init__(dataframe)
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
         self.layerName = "Heatmap3dLayer"
 
 class Heatmap2dLayer(MovesLayer):
-    def __init__(self,dataframe=None):
-        super().__init__(dataframe)
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
         self.layerName = "Heatmap2dLayer"
 
 class ScatterplotLayer(MovesLayer):
-    def __init__(self,dataframe=None):
-        super().__init__(dataframe)
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
         self.layerName = "ScatterplotLayer"
 
 class DepotsLayer:
