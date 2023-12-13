@@ -88,6 +88,11 @@ class HvDeck:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
                 self.movesLayerName.append(layerItem.assignProps)
+            elif(type(layerItem) is ScatterplotLayer):
+                if layerItem.dataframe is not None:
+                    self.movesbasedataframe = layerItem.dataframe
+                self.movesLayerName.append(layerItem.layerName)
+                self.movesLayerName.append(layerItem.assignProps)
             elif(type(layerItem) is DepotsLayer):
                 if layerItem.dataframe is not None:
                     self.depotsBasedataframe = layerItem.dataframe
@@ -250,6 +255,11 @@ class Heatmap2dLayer(MovesLayer):
     def __init__(self,dataframe=None):
         super().__init__(dataframe)
         self.layerName = "Heatmap2dLayer"
+
+class ScatterplotLayer(MovesLayer):
+    def __init__(self,dataframe=None):
+        super().__init__(dataframe)
+        self.layerName = "ScatterplotLayer"
 
 class DepotsLayer:
     dataframe = None
