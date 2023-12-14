@@ -63,32 +63,13 @@ class HvDeck:
         else:
             layers.append(layer)
         for layerItem in layers:
-            if(type(layerItem) is MovesLayer):
-                if layerItem.dataframe is not None:
-                    self.movesbasedataframe = layerItem.dataframe
-                self.movesLayerName.append(layerItem.layerName)
-                self.movesLayerName.append(layerItem.assignProps)
-            elif(type(layerItem) is PointCloudLayer):
-                if layerItem.dataframe is not None:
-                    self.movesbasedataframe = layerItem.dataframe
-                self.movesLayerName.append(layerItem.layerName)
-                self.movesLayerName.append(layerItem.assignProps)
-            elif(type(layerItem) is TextLayer):
-                if layerItem.dataframe is not None:
-                    self.movesbasedataframe = layerItem.dataframe
-                self.movesLayerName.append(layerItem.layerName)
-                self.movesLayerName.append(layerItem.assignProps)
-            elif(type(layerItem) is Heatmap3dLayer):
-                if layerItem.dataframe is not None:
-                    self.movesbasedataframe = layerItem.dataframe
-                self.movesLayerName.append(layerItem.layerName)
-                self.movesLayerName.append(layerItem.assignProps)
-            elif(type(layerItem) is Heatmap2dLayer):
-                if layerItem.dataframe is not None:
-                    self.movesbasedataframe = layerItem.dataframe
-                self.movesLayerName.append(layerItem.layerName)
-                self.movesLayerName.append(layerItem.assignProps)
-            elif(type(layerItem) is ScatterplotLayer):
+            if(type(layerItem) is MovesLayer or
+               type(layerItem) is PointCloudLayer or
+               type(layerItem) is TextLayer or
+               type(layerItem) is Heatmap3dLayer or
+               type(layerItem) is Heatmap2dLayer or
+               type(layerItem) is ScatterplotLayer or
+               type(layerItem) is GridCellLayer):
                 if layerItem.dataframe is not None:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
@@ -260,6 +241,11 @@ class ScatterplotLayer(MovesLayer):
     def __init__(self,dataframe=None,transParams={}):
         super().__init__(dataframe,transParams)
         self.layerName = "ScatterplotLayer"
+
+class GridCellLayer(MovesLayer):
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
+        self.layerName = "GridCellLayer"
 
 class DepotsLayer:
     dataframe = None
