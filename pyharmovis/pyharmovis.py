@@ -69,7 +69,8 @@ class HvDeck:
                type(layerItem) is Heatmap3dLayer or
                type(layerItem) is Heatmap2dLayer or
                type(layerItem) is ScatterplotLayer or
-               type(layerItem) is GridCellLayer):
+               type(layerItem) is GridCellLayer or
+               type(layerItem) is ColumnLayer):
                 if layerItem.dataframe is not None:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
@@ -246,6 +247,11 @@ class GridCellLayer(MovesLayer):
     def __init__(self,dataframe=None,transParams={}):
         super().__init__(dataframe,transParams)
         self.layerName = "GridCellLayer"
+
+class ColumnLayer(MovesLayer):
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
+        self.layerName = "ColumnLayer"
 
 class DepotsLayer:
     dataframe = None
