@@ -71,7 +71,8 @@ class HvDeck:
                type(layerItem) is ScatterplotLayer or
                type(layerItem) is GridCellLayer or
                type(layerItem) is ColumnLayer or
-               type(layerItem) is PolygonLayer):
+               type(layerItem) is PolygonLayer or
+               type(layerItem) is SimpleMeshLayer):
                 if layerItem.dataframe is not None:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
@@ -258,6 +259,11 @@ class PolygonLayer(MovesLayer):
     def __init__(self,dataframe=None,transParams={}):
         super().__init__(dataframe,transParams)
         self.layerName = "PolygonLayer"
+
+class SimpleMeshLayer(MovesLayer):
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
+        self.layerName = "SimpleMeshLayer"
 
 class DepotsLayer:
     dataframe = None
