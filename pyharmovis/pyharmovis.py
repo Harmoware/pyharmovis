@@ -72,7 +72,8 @@ class HvDeck:
                type(layerItem) is GridCellLayer or
                type(layerItem) is ColumnLayer or
                type(layerItem) is PolygonLayer or
-               type(layerItem) is SimpleMeshLayer):
+               type(layerItem) is SimpleMeshLayer or
+               type(layerItem) is ArcLayer):
                 if layerItem.dataframe is not None:
                     self.movesbasedataframe = layerItem.dataframe
                 self.movesLayerName.append(layerItem.layerName)
@@ -264,6 +265,11 @@ class SimpleMeshLayer(MovesLayer):
     def __init__(self,dataframe=None,transParams={}):
         super().__init__(dataframe,transParams)
         self.layerName = "SimpleMeshLayer"
+
+class ArcLayer(MovesLayer):
+    def __init__(self,dataframe=None,transParams={}):
+        super().__init__(dataframe,transParams)
+        self.layerName = "ArcLayer"
 
 class DepotsLayer:
     dataframe = None
