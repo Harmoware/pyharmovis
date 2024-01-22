@@ -194,9 +194,9 @@ class MovesLayer:
                     if operationkey in lineData:
                         operationData = lineData.pop(operationkey)
                         lineData["operation"] = operationData
-                    operationData = lineData["operation"]
-                    for posData in operationData:
-                        posData = transData(posData,transParams)
+                operationData = lineData["operation"]
+                for posData in operationData:
+                    posData = transData(posData,transParams)
             self.dataframe = json.dumps(fileData)
             self.assignProps = json.dumps(transParams,ensure_ascii=False)
         elif(type(dataframe) is list):
@@ -207,9 +207,9 @@ class MovesLayer:
                     if operationkey in lineData:
                         operationData = lineData.pop(operationkey)
                         lineData["operation"] = operationData
-                    operationData = lineData["operation"]
-                    for posData in operationData:
-                        posData = transData(posData,transParams)
+                operationData = lineData["operation"]
+                for posData in operationData:
+                    posData = transData(posData,transParams)
             self.dataframe = json.dumps(fileData)
             self.assignProps = json.dumps(transParams,ensure_ascii=False)
         else:
